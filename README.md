@@ -40,6 +40,7 @@ var init_blueprint2 = __esm(() => {
 ## Options
 
 `fileExtensions`: Should be same file types that you configured bun to copy over to the output directory. Example: `["jpg","woff"]`
+
 `includeHash`: Optional, if provided adds `?[file_hash]` to the output.
 Example:
 ```javascript
