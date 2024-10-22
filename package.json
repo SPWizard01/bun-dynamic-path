@@ -3,6 +3,7 @@
   "description": "A plugin for bun that allows you to dynamically resolve path to a resource",
   "author": "SPWizard01",
   "module": "index.ts",
+  "version": "1.0.0",
   "type": "module",
   "repository": {
     "type": "git",
