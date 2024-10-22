@@ -1,0 +1,17 @@
+{
+  "name": "bun-dynamic-path",
+  "description": "A plugin for bun that allows you to dynamically resolve path to a resource",
+  "author": "SPWizard01",
+  "module": "index.ts",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SPWizard01/bun-dynamic-path"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
