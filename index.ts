@@ -13,7 +13,7 @@ export interface DynamicPathPluginOptions {
     includeHash?: boolean
 }
 const pluginName = `bun-dynamic-path`
-const hasher = new Bun.CryptoHasher("sha1");
+const hasher = new CryptoHasher("sha1");
 
 async function getContentHash(filePath: string) {
     const fileBytes = await Bun.file(filePath).bytes();
