@@ -8,6 +8,9 @@ This is useful when you are not in control of paths or the environment and just 
 
 It uses `import.meta.resolve` to resolve path relative to current ESM module.
 
+## Usage
+`bun i bun-dynamic-path`
+
 ```typescript
 //build.ts
 import { build } from "bun";
@@ -20,6 +23,8 @@ await build({
   plugins: [dynamicPathPlugin({ fileExtensions: ["jpg"] })],
 });
 ```
+
+`bun run build.ts`
 
 Resulting output will be something like:
 
