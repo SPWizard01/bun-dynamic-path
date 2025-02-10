@@ -3,8 +3,11 @@
   "description": "A plugin for bun that allows you to dynamically resolve path to a resource",
   "license": "GPL-3.0-only",
   "author": "SPWizard01",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "type": "module",
+  "scripts": {
+    "prepublish": "bun run build.ts"
+  },
   "files": [
     "dist"
   ],

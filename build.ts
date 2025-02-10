@@ -1,9 +1,11 @@
-import { build } from "bun";
+import { build, $ } from "bun";
+await $`rm -rf dist`;
 await build({
-    entrypoints: ["./index.ts"],
+    entrypoints: ["./src/index.ts"],
     naming: {
         asset: "assets/[name].[ext]",
     },
     outdir: "dist",
     target: "bun"
 });
+await $`tsc`
