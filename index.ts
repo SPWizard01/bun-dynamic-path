@@ -22,7 +22,7 @@ async function getContentHash(filePath: string) {
     return result;
 }
 
-export default function dynamicPathPlugin(pluginConfig: DynamicPathPluginOptions): BunPlugin {
+export function dynamicPathPlugin(pluginConfig: DynamicPathPluginOptions): BunPlugin {
     return {
         name: pluginName,
         target: "browser",
