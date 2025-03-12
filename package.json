@@ -3,13 +3,14 @@
   "description": "A plugin for bun that allows you to dynamically resolve path to a resource",
   "license": "GPL-3.0-only",
   "author": "SPWizard01",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "type": "module",
   "scripts": {
     "prepublish": "bun run build.ts"
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md"
   ],
   "exports": {
     ".": "./dist/index.js"
@@ -19,9 +20,9 @@
     "url": "https://github.com/SPWizard01/bun-dynamic-path"
   },
   "devDependencies": {
-    "@types/bun": "^1.2.2"
+    "@types/bun": "^1.2.5"
   },
   "peerDependencies": {
-    "typescript": "^5.7.3"
+    "typescript": "^5.8.2"
   }
 }
