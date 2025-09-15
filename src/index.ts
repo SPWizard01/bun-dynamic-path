@@ -13,7 +13,6 @@ export interface DynamicPathPluginOptions {
     includeHash?: boolean
 }
 const pluginName = `bun-dynamic-path`
-//NEW
 const resolver = `${pluginName}-resolver`
 const hasher = new CryptoHasher("sha1");
 
@@ -30,12 +29,15 @@ export function dynamicPathPlugin(pluginConfig: DynamicPathPluginOptions): BunPl
         target: "browser",
         setup: ({ onLoad, onResolve, module, config, onBeforeParse }) => {
             const filterRegex = new RegExp(`\\.(${pluginConfig.fileExtensions.join('|')})$`)
-            //NEW, ORDER MATTERS
-            onResolve({ filter: /bun-dynamic-path-resolver/ }, (args) => {
-                const path = args.path.replace(`${resolver}:`, "")
+            const resolverRegex = new RegExp(`^${resolver}:`)
+            //ORDER MATTERS
+            onResolve({ filter: resolverRegex }, (args) => {
+                const path = args.path.replace(`${resolver}:`, "");
+                //replace forward slashes on Windows back to backslashes or it fails to find the file
+                const pretty = type() === "Windows_NT" ? path.replace(/\//g, "\\") : path;
                 return {
-                    path: path,
-                    namespace: resolver
+                    path: pretty,
+                    // namespace: "file"
                 }
             })
 
@@ -64,7 +66,7 @@ export function dynamicPathPlugin(pluginConfig: DynamicPathPluginOptions): BunPl
                     const hash = await getContentHash(path)
                     importString = `\`\${assetPath}?${hash}\``
                 }
-                //NEW resolver
+                //forward to resolver
                 const fullPath = `${resolver}:${path}`;
                 return {
                     contents: `
@@ -75,13 +77,7 @@ export function dynamicPathPlugin(pluginConfig: DynamicPathPluginOptions): BunPl
                     loader: "js",
                 }
             })
-            //NEW, handle resolved paths
-            onLoad({ filter: /./, namespace: resolver }, (args) => {
-                return {
-                    contents: ``,
-                    loader: "file",
-                }
-            })
+
         }
     }
 }

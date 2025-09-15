@@ -1,3 +1,5 @@
-import resolvedDummy from "./test.dummy";
+import resolvedDummy from "./bunlogo.svg";
+import resolvedDummy2 from "./dummy.png";
+import resolvedDummy3 from "./test.dummy";
 
-console.log(resolvedDummy);
+console.log(resolvedDummy, resolvedDummy2, resolvedDummy3);

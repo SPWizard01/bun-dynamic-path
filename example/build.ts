@@ -6,5 +6,5 @@ await build({
     asset: "assets/[name].[ext]",
   },
   outdir: "dist",
-  plugins: [dynamicPathPlugin({ fileExtensions: ["dummy"], includeHash: true })],
+  plugins: [dynamicPathPlugin({ fileExtensions: ["dummy", "svg", "png"], includeHash: false })],
 });
