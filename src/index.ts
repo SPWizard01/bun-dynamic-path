@@ -34,6 +34,7 @@ export function dynamicPathPlugin(pluginConfig: DynamicPathPluginOptions): BunPl
             onResolve({ filter: resolverRegex }, (args) => {
                 const path = args.path.replace(`${resolver}:`, "");
                 //replace forward slashes on Windows back to backslashes or it fails to find the file
+                //still does not work on unix systems.
                 const pretty = type() === "Windows_NT" ? path.replace(/\//g, "\\") : path;
                 return {
                     path: pretty,
@@ -47,7 +48,6 @@ export function dynamicPathPlugin(pluginConfig: DynamicPathPluginOptions): BunPl
                 const fromPath = args.importer
                 const rs = resolve(dirname(fromPath), relativePath)
                 // error: onResolve plugin "path" must be absolute when the namespace is "file"
-                //     at E:\Proj\bun-dynamic-path\example\test.dummy:0
                 let pretty = type() === "Windows_NT" ? rs.replace(/\\/g, "/") : rs
                 if (pluginConfig.includeHash) {
                     pretty = `hash:${pretty}`
