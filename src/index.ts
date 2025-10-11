@@ -1,4 +1,4 @@
-import { type BunPlugin, CryptoHasher } from "bun"
+import { type BunPlugin, hash } from "bun"
 import { resolve, dirname } from "path";
 import { type } from "os";
 export interface DynamicPathPluginOptions {
@@ -14,12 +14,10 @@ export interface DynamicPathPluginOptions {
 }
 const pluginName = `bun-dynamic-path`
 const resolver = `${pluginName}-resolver`
-const hasher = new CryptoHasher("sha1");
 
 async function getContentHash(filePath: string) {
     const fileBytes = await Bun.file(filePath).bytes();
-    hasher.update(fileBytes);
-    const result = hasher.digest("hex");
+    const result = hash.rapidhash(fileBytes);
     return result;
 }
 
@@ -32,23 +30,27 @@ export function dynamicPathPlugin(pluginConfig: DynamicPathPluginOptions): BunPl
             const resolverRegex = new RegExp(`^${resolver}:`)
             //ORDER MATTERS
             onResolve({ filter: resolverRegex }, (args) => {
-                const path = args.path.replace(`${resolver}:`, "");
+                // console.log("RESOLVE", args.path)
+                let path = args.path.replace(`${resolver}:`, "");
+                // console.log("RESOLVE2", path)
                 //replace forward slashes on Windows back to backslashes or it fails to find the file
-                //still does not work on unix systems.
-                const pretty = type() === "Windows_NT" ? path.replace(/\//g, "\\") : path;
+                //not required anymore?
+                //path = type() === "Windows_NT" ? path.replace(/\//g, "\\") : path;
                 return {
-                    path: pretty,
-                    // namespace: "file"
+                    path,
+                    //namespace: "file"
                 }
             })
 
             onResolve({ filter: filterRegex, namespace: "file" }, async (args) => {
-                //REMOVED PREVIOUS HANDLING
                 const relativePath = args.path
                 const fromPath = args.importer
                 const rs = resolve(dirname(fromPath), relativePath)
-                // error: onResolve plugin "path" must be absolute when the namespace is "file"
+                //we need this or top onResolve on Windows will have garbled path like:
+                //RESOLVE bun-dynamic-path-resolver:E:Proun-dynamic-pathexamplunlogo.svg
                 let pretty = type() === "Windows_NT" ? rs.replace(/\\/g, "/") : rs
+                pretty = `${resolver}:${pretty}`
+                //console.log("PRETTY", pretty)
                 if (pluginConfig.includeHash) {
                     pretty = `hash:${pretty}`
                 }
@@ -63,14 +65,16 @@ export function dynamicPathPlugin(pluginConfig: DynamicPathPluginOptions): BunPl
                 let path = args.path
                 if (path.startsWith("hash:")) {
                     path = path.replace("hash:", "")
-                    const hash = await getContentHash(path)
+                    let filePath = path.replace(`${resolver}:`, "")
+                    const hash = await getContentHash(filePath)
                     importString = `\`\${assetPath}?${hash}\``
                 }
                 //forward to resolver
-                const fullPath = `${resolver}:${path}`;
+                //resolver is already part of the path
+                //const fullPath = `${resolver}:${path}`;
                 return {
                     contents: `
-                        import assetPath from '${fullPath}';
+                        import assetPath from '${path}';
                         const resolvePath = import.meta.resolve(${importString});
                         export default resolvePath;
                     `,
