@@ -5,6 +5,7 @@ await build({
     naming: {
         asset: "assets/[name].[ext]",
     },
+    check: true,
     outdir: "dist",
     target: "bun"
 });
